@@ -1,0 +1,106 @@
+{
+  "default_dir": "/home/lordofscripts/Pictures/Wallpapers",
+  "default_wallpaper": "/usr/share/desktop-base/emerald-theme/wallpaper/contents/images/1920x1080.svg",
+  "options": {
+    "notify": false
+  },
+  "categories": {
+    "Aviation": {
+      "protected": false,
+      "directory": "/home/lordofscripts/Pictures/Wallpapers/Aviation"
+    },
+    "Anime": {
+      "protected": true,
+      "key_name": "MMC_Card",
+      "directory": "/home/lordofscripts/Pictures/Wallpapers/Anime"
+    },
+    "Misc": {
+      "protected": false,
+      "directory": "/home/lordofscripts/Pictures/Wallpapers/Misc"
+    },
+    "Nature": {
+      "protected": false,
+      "directory": "/home/lordofscripts/Pictures/Wallpapers/Nature"
+    },
+    "Personal": {
+      "protected": true,
+      "key_name": "MMC_Card",
+      "directory": "/home/lordofscripts/Pictures/Wallpapers/Personal"
+    }
+  },
+  "carousels": {
+    "Private": [
+      "Anime",
+      "Personal"
+    ],
+    "Public": [
+      "Aviation",
+      "Misc",
+      "Nature"
+    ]
+  },
+  "key_devices": {
+    "MMC_Card": "058f:6335 E0FD-1813 5844bef71c16299cc5d73334153544be",
+    "USB-Maxell": "058f:6387 MAXELL_RED 5844bef71c16299cc5d73334153544be"
+  },
+  "angel": {
+    "first_action": {
+      "action": "ActChosenCarousel",
+      "argument": "Public"
+    },
+    "last_action": {
+      "action": "ActDefaultWallpaper",
+      "argument": ""
+    }
+  },  
+  "schedules": [
+    {
+      "title": "Public Carousel workhour",
+      "action": "ActChosenCarousel",
+      "argument": "Public",
+      "cron_tab": "*/10 * * * 0,6"
+    },
+    {
+      "title": "Public Carousel afterhour",
+      "action": "ActChosenCarousel",
+      "argument": "Public",
+      "cron_tab": "*/10 15-23 * * 1-5"
+    },
+    {
+      "title": "Revert to default",
+      "action": "ActDefaultWallpaper",
+      "argument": "",
+      "cron_tab": "56 11 * * 1-5"
+    },
+    {
+      "title": "Lock Prior",
+      "action": "ActLockCarousel",
+      "argument": "",
+      "cron_tab": "59 11 * * 1-5"
+    },
+    {
+      "title": "Unlock After",
+      "action": "ActUnlockCarousel",
+      "argument": "",
+      "cron_tab": "00 13 * * 1-5"
+    },
+    {
+      "title": "Toe Time",
+      "action": "ActChosenCategory",
+      "argument": "Anime",
+      "cron_tab": "*/10 8-12 * * 1-5"
+    },
+    {
+      "title": "Fun Time",
+      "action": "ActChosenCarousel",
+      "argument": "Private",
+      "cron_tab": "*/10 13-14 * * 1-5"
+    },
+    {
+      "title": "The Woods",
+      "action": "ActChosenFile",
+      "argument": "/home/lordofscripts/Pictures/Wallpapers/Nature/enchantedwood-fhd.jpg",
+      "cron_tab": "* 16 * * 1-5"
+    }
+  ]
+}

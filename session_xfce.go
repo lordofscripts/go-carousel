@@ -17,6 +17,8 @@ import (
  *-----------------------------------------------------------------*/
 
 const (
+	FLAVOR_XFCE4 = "xfce"
+
 	EXT_XFQUERY = "/usr/bin/xfconf-query" // @todo get from JSON config
 )
 

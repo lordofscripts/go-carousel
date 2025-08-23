@@ -56,8 +56,8 @@ You can automate it further by:
 
 |     | Show your support   |
 | --- | :---: | 
-| [ ![AllMyLinks](./docs/assets/allmylinks.png)](https://allmylinks.com/lordofscripts)      | visit <br> Lord of Scripts&trade; <br> on [AllMyLinks.com](https://allmylinks.com/lordofscripts)                  |
-| [ ![Buy me a coffee](./docs/assets/buymecoffee.jpg)](https://allmylinks.com/lordofscripts)|  buy Lord of Scripts&trade; <br> a Capuccino on <br>[BuyMeACoffee.com](https://www.buymeacoffee.com/lostinwriting)| 
+| [ ![AllMyLinks](./assets/allmylinks.png)](https://allmylinks.com/lordofscripts)      | visit <br> Lord of Scripts&trade; <br> on [AllMyLinks.com](https://allmylinks.com/lordofscripts)                  |
+| [ ![Buy me a coffee](./assets/buymecoffee.jpg)](https://allmylinks.com/lordofscripts)|  buy Lord of Scripts&trade; <br> a Capuccino on <br>[BuyMeACoffee.com](https://www.buymeacoffee.com/lostinwriting)| 
 
 ## Features
 
@@ -222,3 +222,53 @@ file.
 
 If you read this document properly, you should know you can generate a sample
 version similar to [this](./goCarousel_sample.json).
+
+### CRON Scheduling
+
+If you will be running `goCarousel` from as a CRON job, then a bunch of information
+will not be available to the process. The application will have to dig the information
+by querying processes (not yet implemented). As a last resort, it will use the 
+`assume_session` option in the `options` section of the configuration file. This
+value must be one of: `gnome, xfce4, lxde, cinnamon`.
+
+### Destkop Notifications
+
+<p align="center" width="100%">
+    <img width="33%" src="./assets/goCarousel_cron.png">
+</p>
+
+If you want desktop notifications every time the wallpaper is changed, then enable
+them  by setting `notify` to `true` in the `options` section of the configuration
+file. Please ensure that your system has a properly setup notifications system.
+
+### Protected Categories
+
+```
+    "Anime": {
+      "protected": true,
+      "key_name": "MMC_Card",
+      "directory": "/home/lordofscripts/Pictures/Wallpapers/Anime"
+    }
+```
+
+Protected **Categories** are used when you have wallpapers that may not look
+very professional in your environment. For example Anime on the workplace, etc.
+For that, you set the `protected` attribute to `true` in the corresponding
+category and you must also set the `key_name` attribute of that same category.
+The value of the key name must be one of those listed as JSON *key* in the
+`key_devices` section of the configuration file.
+
+```
+  "key_devices": {
+    "MMC_Card": "058f:6335 E0FD-1813 5844bef71c16299cc5d73334153544be",
+    "USB-Maxell": "058f:6387 MAXELL_RED 5844bef71c16299cc5d73334153544be"
+  }
+```
+
+The matching key has a value with three fields separated by a *space*.
+The 1st is a `vendorId:productId` pair, every USB or MMC card has it.
+The 2nd is the device's *volume label* and the 3rd is an MD5 sum/hash
+of a file named `goCarousel.png` found on the root directory of that
+device. For that `goCarousel` must find the mounting point. But in
+general this simple scheme works well and does not need to be cryptographically
+secure.

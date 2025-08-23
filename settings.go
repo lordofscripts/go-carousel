@@ -41,7 +41,8 @@ type Settings struct {
 }
 
 type Options struct {
-	Notify bool `json:"notify"`
+	Notify        bool   `json:"notify"`
+	AssumeSession string `json:"assume_session"`
 }
 
 type Category struct {
@@ -120,3 +121,18 @@ func NewSchedule(title, cron string, action Action, arg string) *Schedule {
 /* ----------------------------------------------------------------
  *					F u n c t i o n s
  *-----------------------------------------------------------------*/
+
+/**
+ * Whether the named session manager is one we can handle
+ * @audit this must be updated as new DMs are supported
+ */
+func IsSupportedSession(sessionManager string) bool {
+	if sessionManager == FLAVOR_GNOME ||
+		sessionManager == FLAVOR_CINNAMON ||
+		sessionManager == FLAVOR_LXDE ||
+		sessionManager == FLAVOR_XFCE4 {
+		return true
+	}
+
+	return false
+}

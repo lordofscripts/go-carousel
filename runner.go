@@ -26,8 +26,9 @@ import (
  *-----------------------------------------------------------------*/
 
 const (
-	EXT_LSUSB = "/usr/bin/lsusb" // @note from JSON config
-	EXT_LSBLK = "/usr/bin/lsblk" // @note idem
+	EXT_LSUSB    = "/usr/bin/lsusb"    // @note from JSON config
+	EXT_LSBLK    = "/usr/bin/lsblk"    // @note idem
+	EXT_LOGINCTL = "/usr/bin/loginctl" // @note idem
 
 	STOP_FILE string = "%W/.nochange"
 )
@@ -244,4 +245,26 @@ func getLockFile(settings *Settings) string {
 	stopFilename := STOP_FILE
 	stopFilename = strings.Replace(stopFilename, "%W", settings.DefaultDir, 1)
 	return stopFilename
+}
+
+// @audit this is not working....
+func IsCronJob() (bool, error) {
+	// For OS running systemd: loginctl show-session "$(</proc/self/sessionid)" | sed -n 's/^Service=//p'
+	// that should return crond if running from CRON, else systemd-user
+
+	/*
+		exec.Command(EXT_LOGINCTL, "show-session", )
+		parentProcess, err := exec.Command("ps", "-o", "comm=", fmt.Sprint(os.Getppid())).Output()
+		if err != nil {
+			log.Println("isCronJob Error:", err)
+			return false, err
+		}
+
+		if strings.EqualFold(strings.TrimSpace(string(parentProcess)), "cron") {
+			return true, nil
+		} else {
+			return false, nil
+		}
+	*/
+	return os.Getenv("HOME") == "", nil
 }

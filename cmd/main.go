@@ -145,6 +145,7 @@ func CreateDefault(location string) error {
 	var def *carousel.Settings = &carousel.Settings{
 		DefaultDir:       path.Join(home, "Pictures", "Wallpapers"),
 		DefaultWallpaper: "/usr/share/desktop-base/emerald-theme/wallpaper/gnome-background.xml",
+		UserOptions:      carousel.Options{Notify: true, AssumeSession: carousel.FLAVOR_GNOME},
 		Categories: map[string]*carousel.Category{
 			"Aviation":         carousel.NewCategory(home + "/Pictures/Wallpapers/Aviation"),
 			PRIVATE_CATEGORY_A: carousel.NewCategoryWithProtection(home+"/Pictures/Wallpapers/Anime", KEY_DEVICE_1),
@@ -253,11 +254,13 @@ func CronTask(settings *carousel.Settings, tellNext bool) error {
  * the OS exit code.
  */
 func Die(message string, exitCode int) {
+	log.Printf("die: (%d) %s", exitCode, message)
 	fmt.Println("\n", "\t💀 x 💀 x 💀\n\t", message, "\n\tExit code: ", exitCode)
 	os.Exit(exitCode)
 }
 
 func DieWithError(err error, exitCode int) {
+	log.Printf("die: (%d) %s", exitCode, err)
 	fmt.Printf("\n\t💀 x 💀 x 💀\n\t(%T)\n\t%s\n\tExit code: %d\n", err, err, exitCode)
 	os.Exit(exitCode)
 }
@@ -341,6 +344,28 @@ func main() {
 	}
 
 	var err error
+	var isCron bool
+	var logFile *os.File = nil
+
+	isCron, err = carousel.IsCronJob() // @audit IsCronJob is broken
+	if err == nil && isCron {
+		//if true {
+		const LOG_FILE = "/tmp/goCarousel.log"
+		logFile, err = os.OpenFile(LOG_FILE, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		if err != nil {
+			log.Print(err)
+		}
+
+		log.SetOutput(logFile)
+		log.Printf("goCarousel Started from CRON: %t", isCron)
+	}
+	defer func() {
+		if logFile != nil {
+			log.Println("... Closing ...")
+			logFile.Close()
+		}
+	}()
+
 	if actInit {
 		if err = CreateDefault(getConfigFilename()); err != nil {
 			DieWithError(err, 1)
@@ -432,6 +457,7 @@ func main() {
 	}
 
 	err = carousel.Execute(action, argument, settings)
+	log.Printf("exec %s %s returns %v", action, argument, err)
 	if err != nil {
 		DieWithError(err, 6)
 	}

@@ -2,7 +2,8 @@
   "default_dir": "/home/lordofscripts/Pictures/Wallpapers",
   "default_wallpaper": "/usr/share/desktop-base/emerald-theme/wallpaper/contents/images/1920x1080.svg",
   "options": {
-    "notify": false
+    "notify": false,
+    "assume_session": "gnome"
   },
   "categories": {
     "Aviation": {

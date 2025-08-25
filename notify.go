@@ -8,6 +8,8 @@
 package carousel
 
 import (
+	_ "embed"
+
 	"github.com/gen2brain/beeep"
 )
 
@@ -18,6 +20,9 @@ import (
 const (
 	EXT_NOTIFY = "/usr/bin/notify-send"
 )
+
+//go:embed docs/assets/goCarousel.png
+var defaultIconData []byte
 
 /* ----------------------------------------------------------------
  *				I n t e r f a c e s

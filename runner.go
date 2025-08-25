@@ -19,6 +19,8 @@ import (
 	"os/exec"
 	"strings"
 	"time"
+
+	"github.com/gen2brain/beeep"
 )
 
 /* ----------------------------------------------------------------
@@ -155,10 +157,17 @@ func LockCarousel(settings *Settings) error {
 	var fdOut *os.File
 	if fdOut, err = os.Create(getLockFile(settings)); err == nil {
 		_, err = fdOut.WriteString(time.Now().String())
+		if err == nil {
+			beeep.Notify("Beware", "Wallpapers locked", defaultIconData)
+		}
 	} else {
+		beeep.Alert("Beware", "Could not lock carousel", defaultIconData)
 		log.Print(err)
 	}
 
+	if fdOut != nil {
+		fdOut.Close()
+	}
 	return err
 }
 
@@ -168,7 +177,12 @@ func LockCarousel(settings *Settings) error {
 func UnlockCarousel(settings *Settings) error {
 	var err error
 	if err = os.Remove(getLockFile(settings)); err != nil {
+		beeep.Alert("Beware", "Could not unlock carousel", defaultIconData)
 		log.Print(err)
+	} else {
+		if err == nil {
+			beeep.Notify("Just to let you know", "Wallpapers unlocked", defaultIconData)
+		}
 	}
 
 	return err

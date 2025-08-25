@@ -280,6 +280,11 @@ func AssertOrDie(condition bool, deathMessage string, exitCode int) {
 	}
 }
 
+func Version() {
+	carousel.Copyright(carousel.CO1, true)
+	carousel.BuyMeCoffee("lostinwriting")
+}
+
 func Help() {
 	carousel.Copyright(carousel.CO1, true)
 
@@ -313,12 +318,13 @@ func main() {
 	fmt.Println("GO-GnomeChangeBackground")
 
 	// ============= CLI FLAGS ===============
-	var actInit, actHelp, actAnyGlobal, actLock, actUnlock, actStatus, actDefault, actVerify, actWhoAmI bool
+	var actInit, actHelp, actVersion, actAnyGlobal, actLock, actUnlock, actStatus, actDefault, actVerify, actWhoAmI bool
 	var actTask, optNextTime bool
 	var actDaemon int
 	var group, category, filename string
 
 	flag.BoolVar(&actHelp, "help", false, "Cry for help!")
+	flag.BoolVar(&actVersion, "version", false, "Show version")
 	flag.BoolVar(&actInit, "init", false, "Create default configuration")
 	flag.BoolVar(&actVerify, "verify", false, "Verify CRON")
 	flag.BoolVar(&actLock, "lock", false, "Prevent change")
@@ -338,6 +344,11 @@ func main() {
 	flag.Parse()
 
 	// ============= CLI PROCESS ===============
+	if actVersion {
+		Version()
+		os.Exit(0)
+	}
+
 	if actHelp {
 		Help()
 		os.Exit(0)
@@ -403,12 +414,16 @@ func main() {
 	}
 
 	if actVerify {
-		fmt.Println("Verifying Cron Jobs")
+		wm := carousel.NewWallpaperMgr(settings)
+		if err = wm.Init(); err == nil {
+			fmt.Println("Window manager: ", wm.Identify())
+		}
+		fmt.Println("Verifying Cron Jobs...")
 		var cumulative bool = true
 		for idx, crontab := range settings.Schedules {
 			ok := gronx.IsValid(crontab.CronTab)
 			cumulative = cumulative && ok
-			fmt.Printf("#%2d %t %s\n", idx+1, ok, crontab.Title)
+			fmt.Printf("\t#%2d %t %s\n", idx+1, ok, crontab.Title)
 		}
 		if !cumulative {
 			Die("Some Cron entries are invalid", 5)
@@ -419,6 +434,10 @@ func main() {
 	if actDaemon > -1 {
 		CarouselTasker(settings, actDaemon)
 		os.Exit(0)
+	}
+
+	if carousel.IsLocked(settings) {
+		os.Exit(124)
 	}
 
 	if actTask {

@@ -1,0 +1,15 @@
+go-carousel (0.9.2) UNRELEASED; urgency=low
+
+  * Null #GHB-001 GitHub hickup nulled the first issue.
+  * Fixes #GHB-002 **Ignores lock status** During migration I forgot to add the conditional.
+    The reporting of Lock/Unlock via desktop notifications is also improved.
+  * #GHB-003 **Debian Packaging** the makefile is now able to create a *Debian* package
+    in the localhost build directory.  
+
+ -- Lord of Scripts <lordofscripts@users.noreply.github.com>  Mon, 25 Aug 2025 14:53:00 -0500
+
+go-carousel (0.9.1) UNRELEASED; urgency=low
+
+  * Initial release.
+
+ -- Lord of Scripts <lordofscripts@users.noreply.github.com>  Sat, 23 Aug 2025 13:07:16 -0500

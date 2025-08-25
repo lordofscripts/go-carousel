@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --builddirectory=build
+
+override_dh_auto_install:
+	dh_auto_install
+	dh_fixperms
+
+override_dh_fixperms:
+	dh_fixperms

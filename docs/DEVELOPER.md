@@ -69,3 +69,17 @@ built-in handler uses the presence of the word "dark" to detect the *Dark* varia
 `xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/color-style` shows us the
 current color scheme. In my case it returns `1`
 
+## Maintenance
+
+Ensure everything is okay (build works & correct versioning) before
+building the **Debian** package with `make debian`.
+
+### Version change
+
+-[ ] Update Debian package [control file](../distrib/DEBIAN/control)
+-[ ] Update [version.go](../version.go) for *Program* Version, Revision, Alpha/Beta/RC/Release
+-[ ] Update `PKG_VERSION` in [Makefile](../Makefile)
+
+### Package Revision change
+
+-[ ] Update `PKG_REVISION` in [Makefile](../Makefile)

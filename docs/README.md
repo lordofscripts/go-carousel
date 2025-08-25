@@ -74,6 +74,14 @@ You can automate it further by:
 the built-in scheduler instead of depending on CRON.
 * Notifications are now more universal (DBus, LibNotify, etc.)
 
+<p align="center" width="33%">
+    <img width="10%" src="https://github.com/lordofscripts/lordofscripts/raw/main/diamond_sponsor.png">
+    <img width="10%" src="https://github.com/lordofscripts/lordofscripts/raw/main/diamond_sponsor.png">
+    <img width="10%" src="https://github.com/lordofscripts/lordofscripts/raw/main/diamond_sponsor.png">
+</p>
+
+*Become a Diamond sponsor and get your logo & link listed here 3-5 slots*
+
 ### Proposed Wallpaper structure
 
 Most desktops nowadays have a directory called `Pictures` and all Linux desktops seem
@@ -231,11 +239,9 @@ by querying processes (not yet implemented). As a last resort, it will use the
 `assume_session` option in the `options` section of the configuration file. This
 value must be one of: `gnome, xfce4, lxde, cinnamon`.
 
-### Destkop Notifications
+### Desktop Notifications
 
-<p align="center" width="100%">
-    <img width="33%" src="./assets/goCarousel_cron.png">
-</p>
+![](./assets/goCarousel_cron.png)
 
 If you want desktop notifications every time the wallpaper is changed, then enable
 them  by setting `notify` to `true` in the `options` section of the configuration
@@ -272,3 +278,7 @@ of a file named `goCarousel.png` found on the root directory of that
 device. For that `goCarousel` must find the mounting point. But in
 general this simple scheme works well and does not need to be cryptographically
 secure.
+
+## Sponsors
+
+*Become a sponsor and get your name listed here!*

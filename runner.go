@@ -180,9 +180,7 @@ func UnlockCarousel(settings *Settings) error {
 		beeep.Alert("Beware", "Could not unlock carousel", defaultIconData)
 		log.Print(err)
 	} else {
-		if err == nil {
-			beeep.Notify("Just to let you know", "Wallpapers unlocked", defaultIconData)
-		}
+		beeep.Notify("Just to let you know", "Wallpapers unlocked", defaultIconData)
 	}
 
 	return err

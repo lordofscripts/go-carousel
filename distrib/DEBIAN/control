@@ -1,5 +1,5 @@
 Package: go-carousel
-Version: 0.9.2
+Version: 0.9.3
 Architecture: amd64
 Depends: 
 Section: utils
@@ -8,8 +8,8 @@ Maintainer: Lord of Scripts <lordofscripts@users.noreply.github.com>
 Build-Depends: debhelper-compat (= 13)
 Standards-Version: 3.9.6
 Homepage: https:/github.com/lordofscripts/go-carousel
-Description: Fun wallpaper carousel and manager for multiple Linux graphical desktops
+Description: Fun wallpaper carousel and manager for multiple graphical desktops
  Show your mood and improve your mood by periodically changing your 
- desktop wallpaper on Linux. You can use the command-line, via a CRON 
- job or use its own scheduling capabilities. Organize them in categories 
+ desktop wallpaper on Linux and Windows. You can use the command-line, via a 
+ CRON job or use its own scheduling capabilities. Organize them in categories 
  and Carousels (collection of categories), as many as you want. 

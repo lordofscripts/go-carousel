@@ -1,4 +1,8 @@
 goCarousel /usr/bin/
+goUnixStyle /usr/bin/
+goCarousel.1.gz /usr/share/man/man1
+goUnixStyle.1.gz /usr/share/man/man1
+copyright /usr/share/doc/go-carousel/
 README.md /usr/share/doc/go-carousel/
 allmylinks.png /usr/share/doc/go-carousel/assets/
 buymecoffee.jpg /usr/share/doc/go-carousel/assets/

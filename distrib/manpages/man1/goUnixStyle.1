@@ -1,0 +1,19 @@
+.\" Manpage for your_command
+.TH goUnixStyle 1 "August 27, 2025" "1.0" "Checks files for UNIX EOL"
+.SH NAME
+goUnixStyle \- A line-ending (CRLF/LF) checker.
+.SH SYNOPSIS
+goUnixStyle [OPTIONS] [ARGUMENTS]
+.SH DESCRIPTION
+A simple utility that checks a file or set of files for conformancy
+to the rulers of the world line endings (UNIX EOL). By default it
+list the file(s) that have DOS (CRLF) endings. Optionally it can 
+also show those that are conformant (LF).
+.SH OPTIONS
+.TP
+-ok
+Also show files with proper (UNIX) end-of-line (EOL).
+.SH BUGS
+No known bugs at this time.
+.SH AUTHOR
+Lord of Scripts <lordofscripts@users.noreply.github.com>

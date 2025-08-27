@@ -1,0 +1,156 @@
+'\" t
+.\"     Title: goCarousel
+.\"    Author: Didimo Grimaldo
+.\" Generator: Good Ole' Fingers
+.\"      Date: 2025-08-27
+.\"    Manual: Go Carousel Configuration File
+.\"    Source: go-carousel
+.\"  Language: English 
+.\"
+.TH "GOCAROUSEL" "5" "08/27/2025" go\-carousel 1\&.0\&.0" "GoCarousel Configuration"
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+goCarousel.json \- the configuration file
+.SH "DESCRIPTION"
+.PP
+It is a JSON-formatted file that specifies the Go Carousel Configuration. It has
+the following field entries:
+.\" -----------------------------------------------------------------
+.\" * INDIVIDUAL FIELDS *
+.\" -----------------------------------------------------------------
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+default_dir
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+default_wallpaper
+.RE
+.PP
+The \fIdefault_dir\fR specifies the default Wallpapers directory. Usually
+for generic wallpapers. When the \fBany\fR option is used, a random
+wallpaper is chosen from this directory.
+.PP
+The \fIdefault_wallpaper\fR setting specifies the desktop background
+to use when the \fBdefault\fR option is used.
+.\" -----------------------------------------------------------------
+.\" * CONFIGURATION SECTIONS *
+.\" -----------------------------------------------------------------
+Additionally, it has several sections that group related fields. These sections are:
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+options
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+categories
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+carousels
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+key_devices
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+schedules
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+angel
+.RE
+.PP
+In the \fBoptions\fR section the most important item is the \fBnotify\fR value
+which enables or disables Desktop Notifications.
+.PP
+In the \fBcategories\fR section you define each of the categories. You refer
+to them using the \fBC\fR CLI option. Each category entry specifies whether
+it is \fBprotected\fR and the \fBdirectory\fR where those wallpapers are found.
+.PP
+Then comes the \fBcarousels\fR section where you define as many Carousels as
+you want. A Carousel is a list of Categories. When the \fBG\fR CLI option is
+used, the application will first chose a random category from the Carousel
+list, and then a random desktop wallpaper from the chosen random Category.
+A carousel will respect protected categories.
+.PP
+The \fBkey_devices\fR lists each of the \fIsecurity keys\fR used to protecte
+a Category. This value has three parts: vendor and product ID separated by 
+a colon (\(lq:\(rq)\&. And the next two fields are separated by a space and
+are the device Volume Label and the protection object MD5 sum.
+.PP
+The \fBangel\fR section lists only the first and last actions the daemon
+should take when starting and ending. These are commands mapped to the CLI
+options such as ActChosenCarousel, ActChosenCategory or ActDefaultWallpaper.
+.PP
+.SH "FILES"
+.PP
+~/.config/coralys/goCarousel.json
+.RS 4
+User Configuration file\&.
+.RE
+.PP
+.SH "SEE ALSO"
+.PP
+\fBgoCarousel\fR(1)
+.SH AUTHOR
+Lord of Scripts <lordofscripts@users.noreply.github.com>

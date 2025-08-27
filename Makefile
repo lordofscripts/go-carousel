@@ -48,6 +48,8 @@ debian:
 	mkdir -p ${PKG_BUILD_DIR}/usr/share/man/man1
 	gzip -n -9 -c distrib/manpages/man1/goCarousel.1 > ${PKG_BUILD_DIR}/usr/share/man/man1/goCarousel.1.gz
 	gzip -n -9 -c distrib/manpages/man1/goUnixStyle.1 > ${PKG_BUILD_DIR}/usr/share/man/man1/goUnixStyle.1.gz
+	mkdir -p ${PKG_BUILD_DIR}/usr/share/man/man5
+	gzip -n -9 -c distrib/manpages/man5/goCarousel.5 > ${PKG_BUILD_DIR}/usr/share/man/man1/goCarousel.5.gz
 	strip --strip-unneeded ${BIN_OUT}
 	cp ${BIN_OUT} ${PKG_BUILD_DIR}/usr/bin
 	strip --strip-unneeded ${BIN_OUT_UTIL}

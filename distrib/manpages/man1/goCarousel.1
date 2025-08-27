@@ -1,0 +1,56 @@
+.\" Manpage for your_command
+.TH goCarousel 1 "August 27, 2025" "1.0" "A wallpaper carousel"
+.SH NAME
+goCarousel \- A Linux/Windows Wallpaper Carousel with scheduler.
+.SH SYNOPSIS
+goCarousel [OPTIONS] [ARGUMENTS]
+.SH DESCRIPTION
+A neat desktop wallpaper carousel for Linux and Windows that is
+capable of using categories and carousels (groups of categories).
+It contains its own scheduler or can be used with an external
+scheduler like CRON. It can be locked and categories can be
+protected with a simple authorization mechanism.
+.SH OPTIONS
+.TP
+-init
+Creates a default configuration file.
+.TP
+-verify
+Displays location of configuration and checks scheduling times.
+.TP
+-ident 
+Identifies the current graphical display manager.
+.TP
+-default
+Sets the specified (config) default wallpaper.
+.TP
+-any
+Sets the wallpaper from the specified (config) General category.
+.TP
+-lock
+Locks the Carousel to prevent changing the wallpaper.
+.TP
+-unlock
+Removes the lock and allows the app to change the wallpaper again.
+.TP
+-status
+Shows the current lock/unlock state.
+.TP
+-C, -category name
+Sets a random wallpaper from the specified category.
+.TP
+-G, -carousel name
+Sets a random wallpaper from the specified carousel.
+.TP
+-F wallpaper
+Sets the specified wallpaper.
+.TP
+-task
+Shows and checks the scheduling info from the config file.
+.TP
+-daemon N
+Run as a self-scheduled carousel (like a daemon) for N minutes
+.SH BUGS
+No known bugs at this time.
+.SH AUTHOR
+Lord of Scripts <lordofscripts@users.noreply.github.com>

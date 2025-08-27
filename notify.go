@@ -1,9 +1,9 @@
 /* -----------------------------------------------------------------
  *					L o r d  O f   S c r i p t s (tm)
  *				  Copyright (C)2025 Dídimo Grimaldo T.
- *							   workspace.json
+ *							go-carousel
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- *
+ * Desktop notifications.
  *-----------------------------------------------------------------*/
 package carousel
 
@@ -17,9 +17,7 @@ import (
  *						G l o b a l s
  *-----------------------------------------------------------------*/
 
-const (
-	EXT_NOTIFY = "/usr/bin/notify-send"
-)
+const ()
 
 //go:embed docs/assets/goCarousel.png
 var defaultIconData []byte
@@ -58,17 +56,6 @@ func init() {
 /* ----------------------------------------------------------------
  *					F u n c t i o n s
  *-----------------------------------------------------------------*/
-
-func NotifyDesktopExt(body, iconPath string) error {
-	_, err := ExecuteProgram(EXT_NOTIFY, // @note never returns...
-		"-e",
-		"--app-name='gnomeBackgroundChange",
-		"-t", "1500",
-		"-i", iconPath,
-		"Gnome Background Change",
-		"<i>"+body+"</i>")
-	return err
-}
 
 func NotifyDesktop(body, iconPath string) error {
 	body = "<i>" + body + "</i>"

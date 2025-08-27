@@ -1,3 +1,5 @@
+//go:build unix
+
 /* -----------------------------------------------------------------
  *					L o r d  O f   S c r i p t s (tm)
  *				  Copyright (C)2025 Dídimo Grimaldo T.
@@ -13,6 +15,8 @@ import (
 	"fmt"
 	"log"
 	"strings"
+
+	"lordofscripts/carousel/app"
 )
 
 /* ----------------------------------------------------------------
@@ -35,6 +39,14 @@ const (
  *				I n t e r f a c e s
  *-----------------------------------------------------------------*/
 var _ ISessionManager = (*GnomeSession)(nil)
+
+/* ----------------------------------------------------------------
+ *				I n i t i a l i z e r
+ *-----------------------------------------------------------------*/
+
+func init() {
+	app.AssertOrDie(!app.FileExists(EXT_GSETTINGS), "Missing Gnome proxy", 11)
+}
 
 /* ----------------------------------------------------------------
  *				P u b l i c		T y p e s

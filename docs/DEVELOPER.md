@@ -83,3 +83,16 @@ building the **Debian** package with `make debian`.
 ### Package Revision change
 
 -[ ] Update `PKG_REVISION` in [Makefile](../Makefile)
+
+### File Format
+
+All line endings must be in UNIX format (\n rather than \r\n):
+This will update all files within that directory from CRLF to LF and print the list of files updated to the command line. Note you may need to run sudo apt install dos2unix first to install the dos2unix utility:
+
+First compile the `goUnixStyle` utility in this package:
+
+`go build -o $GOBIN/goUnixStyle cmd/util/line_endings.go`
+
+Then run it (it is NOT recursive): `goUnixStyle *` it will print the names
+of all files with offending (CRLF) line endings. If you also want it to
+tell you which files are OK (LF) add the `-ok` command-line flag.

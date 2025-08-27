@@ -1,6 +1,6 @@
 # Go Carousel
 
-A desktop wallpaper carousel for the Linux desktop. Schedule your favorite 
+A desktop wallpaper carousel for Linux & Windows desktops. Schedule your favorite 
 wallpapers with ease and work with enjoyment (almost) regardless of your
 desktop manager.
 
@@ -28,6 +28,7 @@ Supported Window Managers:
 - Cinnamon
 - XFCE v4
 - LXDE
+- Micro$osf Windows
 
 You can automate it further by:
 
@@ -63,7 +64,7 @@ You can automate it further by:
 
 * A simple CLI interface
 * A single, portable JSON configuration file (`~/.config/coralys/goCarousel.json`)
-* Supports multiple window managers: Gnome, Cinnamon, LXDE, XFCE.
+* Supports multiple window managers: Gnome, Cinnamon, LXDE, XFCE & Windows.
 * Desktop notifications (ensure your server is properly configured)
 * The notion of files (wallpaper), categories and carousels (collection of categories)
 * You can select a specific wallpaper file
@@ -119,6 +120,18 @@ set as wallpaper if the *authorization* is successful (I use a simple scheme jus
 ```
     go install github.com/lordofscripts/go-carousel@latest
 ```
+
+Then let it create the default *configuration file* that you will need
+to edit to define your own **Categories & Carousels** and optionally
+your **Protection Keys**.
+
+```
+    goCarousel -init
+```
+
+The configuration file is in `~/.config/coralys/goCarousel.json` on
+Linux and MacOS and in `C:\Users\YOUR_NAME\AppData\Roaming\coralys\goCarousel.json`
+for Windows environments.
 
 ## Usage
 
@@ -279,6 +292,13 @@ device. For that `goCarousel` must find the mounting point. But in
 general this simple scheme works well and does not need to be cryptographically
 secure.
 
+Do you need the MD5 file hash of your chosen object? It is easy without
+installing anything that isn't already on your computer:
+
+On **Windows** use **PowerShell**: `Get-FileHash E:\goCarousel.png -Algorithm MD5`
+
+On **Linux** use any terminal window and type: `md5sum /path/to/goCarousel.png`
+ 
 ## Sponsors
 
 *Become a sponsor and get your name listed here!*

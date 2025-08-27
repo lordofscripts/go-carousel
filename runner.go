@@ -1,9 +1,9 @@
 /* -----------------------------------------------------------------
  *					L o r d  O f   S c r i p t s (tm)
  *				  Copyright (C)2025 Dídimo Grimaldo T.
- *							   workspace.json
+ *							go-carousel
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- *
+ * External command runner.
  *-----------------------------------------------------------------*/
 package carousel
 
@@ -28,10 +28,6 @@ import (
  *-----------------------------------------------------------------*/
 
 const (
-	EXT_LSUSB    = "/usr/bin/lsusb"    // @note from JSON config
-	EXT_LSBLK    = "/usr/bin/lsblk"    // @note idem
-	EXT_LOGINCTL = "/usr/bin/loginctl" // @note idem
-
 	STOP_FILE string = "%W/.nochange"
 )
 
@@ -45,10 +41,6 @@ const (
 
 /* ----------------------------------------------------------------
  *				P r i v a t e	T y p e s
- *-----------------------------------------------------------------*/
-
-/* ----------------------------------------------------------------
- *				I n i t i a l i z e r
  *-----------------------------------------------------------------*/
 
 /* ----------------------------------------------------------------
@@ -66,44 +58,6 @@ const (
 /* ----------------------------------------------------------------
  *					F u n c t i o n s
  *-----------------------------------------------------------------*/
-
-/**
- * Verify that the USB device by VendorID:ProductID is connected
- */
-func IsDeviceOnline(vendorId, productId string) (bool, error) {
-	devId := vendorId + ":" + productId
-	outStr, err := ExecuteProgram(EXT_LSUSB, "-d", devId)
-	if err != nil {
-		log.Println("error IsDeviceOnline", err)
-		return false, err
-	}
-
-	if outStr == "" {
-		return false, nil
-	}
-
-	return true, nil
-}
-
-func GetMountPoint(volumeLabel string) (string, error) {
-	outStr, err := ExecuteProgram(EXT_LSBLK, "-P", "-o", "name,label,mountpoint") // or use -P instead of -l
-	if err != nil {
-		log.Println("error IsDeviceOnline", err)
-		return "", err
-	}
-
-	// with -P: NAME="sda7" LABEL="" MOUNTPOINT="/home"
-	// with -l: sda7      /home
-	lines := strings.Split(outStr, "\n")
-	for _, line := range lines {
-		if strings.Contains(line, volumeLabel) { // LABEL @todo improve
-			mpoint := line[strings.Index(line, "MOUNTPOINT=")+12 : len(line)-1]
-			return mpoint, nil
-		}
-	}
-
-	return "", fmt.Errorf("mountpoint of '%s' not found", volumeLabel)
-}
 
 func ExecuteProgram(programPath string, args ...string) (string, error) {
 	cmd := exec.Command(programPath, args...)
@@ -123,7 +77,7 @@ func ExecuteProgram(programPath string, args ...string) (string, error) {
 	return out.String(), nil
 }
 
-func FileExists(filename string) bool {
+func FileExists(filename string) bool { //@audit deprecate in favor of app.FileExists
 	_, err := os.Stat(filename)
 	return !errors.Is(err, os.ErrNotExist)
 }
@@ -257,26 +211,4 @@ func getLockFile(settings *Settings) string {
 	stopFilename := STOP_FILE
 	stopFilename = strings.Replace(stopFilename, "%W", settings.DefaultDir, 1)
 	return stopFilename
-}
-
-// @audit this is not working....
-func IsCronJob() (bool, error) {
-	// For OS running systemd: loginctl show-session "$(</proc/self/sessionid)" | sed -n 's/^Service=//p'
-	// that should return crond if running from CRON, else systemd-user
-
-	/*
-		exec.Command(EXT_LOGINCTL, "show-session", )
-		parentProcess, err := exec.Command("ps", "-o", "comm=", fmt.Sprint(os.Getppid())).Output()
-		if err != nil {
-			log.Println("isCronJob Error:", err)
-			return false, err
-		}
-
-		if strings.EqualFold(strings.TrimSpace(string(parentProcess)), "cron") {
-			return true, nil
-		} else {
-			return false, nil
-		}
-	*/
-	return os.Getenv("HOME") == "", nil
 }

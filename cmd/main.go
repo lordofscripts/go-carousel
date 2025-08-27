@@ -9,11 +9,11 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"flag"
 	"fmt"
 	"log"
 	"lordofscripts/carousel"
+	"lordofscripts/carousel/app"
 	"os"
 	"path"
 	"sort"
@@ -47,13 +47,6 @@ const (
  *				I n i t i a l i z e r
  *-----------------------------------------------------------------*/
 
-func init() {
-	AssertOrDie(!FileExists(carousel.EXT_NOTIFY), "Missing notification proxy", 10)
-	AssertOrDie(!FileExists(carousel.EXT_GSETTINGS), "Missing Gnome proxy", 11)
-	AssertOrDie(!FileExists(carousel.EXT_LSUSB), "Missing lsusb", 12)
-	AssertOrDie(!FileExists(carousel.EXT_LSBLK), "Missing lsblk", 13)
-}
-
 /* ----------------------------------------------------------------
  *				C o n s t r u c t o r s
  *-----------------------------------------------------------------*/
@@ -76,22 +69,22 @@ func init() {
  *					F u n c t i o n s
  *-----------------------------------------------------------------*/
 
-func getConfigPath() string {
+func getConfigPath(checkExists bool) string {
 	cfgDir, err := os.UserConfigDir()
 	if err != nil {
-		DieWithError(err, 20)
+		app.DieWithError(err, 20)
 	}
 
 	cfgDir = path.Join(cfgDir, CONFIG_GROUP)
-	if !DirExists(cfgDir) {
-		DieWithError(carousel.NewAppErrorMsg(carousel.ErrNoConfigurationDir, "config dir").At("main"), 21)
+	if checkExists && !app.DirExists(cfgDir) {
+		app.DieWithError(carousel.NewAppErrorMsg(carousel.ErrNoConfigurationDir, "config dir").At("main"), 21)
 	}
 
 	return cfgDir
 }
 
 func getConfigFilename() string {
-	filename := path.Join(getConfigPath(), SETTINGS_FILE)
+	filename := path.Join(getConfigPath(true), SETTINGS_FILE)
 	return filename
 }
 
@@ -104,16 +97,6 @@ func getSettings(filename string) (*carousel.Settings, error) {
 	} else {
 		return &settings, nil
 	}
-}
-
-func DirExists(filename string) bool {
-	fi, err := os.Stat(filename)
-	return !errors.Is(err, os.ErrNotExist) && fi.IsDir()
-}
-
-func FileExists(filename string) bool {
-	_, err := os.Stat(filename)
-	return !errors.Is(err, os.ErrNotExist)
 }
 
 /**
@@ -145,7 +128,7 @@ func CreateDefault(location string) error {
 	var def *carousel.Settings = &carousel.Settings{
 		DefaultDir:       path.Join(home, "Pictures", "Wallpapers"),
 		DefaultWallpaper: "/usr/share/desktop-base/emerald-theme/wallpaper/gnome-background.xml",
-		UserOptions:      carousel.Options{Notify: true, AssumeSession: carousel.FLAVOR_GNOME},
+		UserOptions:      carousel.DefaultUserOptions,
 		Categories: map[string]*carousel.Category{
 			"Aviation":         carousel.NewCategory(home + "/Pictures/Wallpapers/Aviation"),
 			PRIVATE_CATEGORY_A: carousel.NewCategoryWithProtection(home+"/Pictures/Wallpapers/Anime", KEY_DEVICE_1),
@@ -158,8 +141,8 @@ func CreateDefault(location string) error {
 			PRIVATE_CAROUSEL: carousel.NewCategoryCollection("Anime", "Gothic"),
 		},
 		KeyDevices: map[string]string{
-			KEY_DEVICE_2: "058f:6387 MAXELL_BLUE",
-			KEY_DEVICE_1: "058f:6335 E0FD-1813",
+			KEY_DEVICE_2: "058f:6387 MAXELL_BLUE 5844bef71c16299cc5d73334153544be",
+			KEY_DEVICE_1: "058f:6335 E0FD-1813 5844bef71c16299cc5d73334153544be",
 		},
 		AngelOptions: carousel.AngelOpts{
 			FirstAction: angelEnter,
@@ -249,37 +232,6 @@ func CronTask(settings *carousel.Settings, tellNext bool) error {
 	return nil
 }
 
-/**
- * Death of an application by outputting a good-bye and setting
- * the OS exit code.
- */
-func Die(message string, exitCode int) {
-	log.Printf("die: (%d) %s", exitCode, message)
-	fmt.Println("\n", "\t💀 x 💀 x 💀\n\t", message, "\n\tExit code: ", exitCode)
-	os.Exit(exitCode)
-}
-
-func DieWithError(err error, exitCode int) {
-	log.Printf("die: (%d) %s", exitCode, err)
-	fmt.Printf("\n\t💀 x 💀 x 💀\n\t(%T)\n\t%s\n\tExit code: %d\n", err, err, exitCode)
-	os.Exit(exitCode)
-}
-
-func Assert(condition bool, warnMessage string) {
-	const UC_RED_EXCLAMATION = rune(0x2757) // Dingbats
-	if condition {
-		fmt.Printf("\n\t%c Assertion Failed:\n\t%s\n", UC_RED_EXCLAMATION, warnMessage)
-	}
-}
-
-func AssertOrDie(condition bool, deathMessage string, exitCode int) {
-	const UC_RED_EXCLAMATION = rune(0x2757) // Dingbats
-	if condition {
-		fmt.Printf("\n\t%c Assertion Failed:", UC_RED_EXCLAMATION)
-		Die(deathMessage, exitCode)
-	}
-}
-
 func Version() {
 	carousel.Copyright(carousel.CO1, true)
 	carousel.BuyMeCoffee("lostinwriting")
@@ -361,8 +313,8 @@ func main() {
 	isCron, err = carousel.IsCronJob() // @audit IsCronJob is broken
 	if err == nil && isCron {
 		//if true {
-		const LOG_FILE = "/tmp/goCarousel.log"
-		logFile, err = os.OpenFile(LOG_FILE, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		LOG_FILENAME := path.Join(app.GetUserTempDir(), "goCarousel.log")
+		logFile, err = os.OpenFile(LOG_FILENAME, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
 			log.Print(err)
 		}
@@ -378,27 +330,36 @@ func main() {
 	}()
 
 	if actInit {
+		// Ensure our configuration directory exists
+		configPath := getConfigPath(false)
+		if !app.DirExists(configPath) {
+			if err := os.MkdirAll(configPath, 0644); err != nil {
+				app.Die("could not create configuration path", 1)
+			}
+			fmt.Printf("Configuration Path: %s\n", configPath)
+		}
+
 		if err = CreateDefault(getConfigFilename()); err != nil {
-			DieWithError(err, 1)
+			app.DieWithError(err, 1)
 		}
 		os.Exit(0)
 	}
 
 	var settings *carousel.Settings
 	if settings, err = getSettings(getConfigFilename()); err != nil {
-		DieWithError(err, 2)
+		app.DieWithError(err, 2)
 	}
 
 	if actLock {
 		if err = carousel.LockCarousel(settings); err != nil {
-			DieWithError(err, 3)
+			app.DieWithError(err, 3)
 		}
 		os.Exit(0)
 	}
 
 	if actUnlock {
 		if err = carousel.UnlockCarousel(settings); err != nil {
-			DieWithError(err, 4)
+			app.DieWithError(err, 4)
 		}
 		os.Exit(0)
 	}
@@ -418,6 +379,7 @@ func main() {
 		if err = wm.Init(); err == nil {
 			fmt.Println("Window manager: ", wm.Identify())
 		}
+		fmt.Printf("Configuration: %s\n", getConfigFilename())
 		fmt.Println("Verifying Cron Jobs...")
 		var cumulative bool = true
 		for idx, crontab := range settings.Schedules {
@@ -426,7 +388,7 @@ func main() {
 			fmt.Printf("\t#%2d %t %s\n", idx+1, ok, crontab.Title)
 		}
 		if !cumulative {
-			Die("Some Cron entries are invalid", 5)
+			app.Die("Some Cron entries are invalid", 5)
 		}
 		os.Exit(0)
 	}
@@ -444,7 +406,7 @@ func main() {
 		// (@) No command-line arguments? Execute Cron
 		err = CronTask(settings, optNextTime)
 		if err != nil {
-			DieWithError(err, 5)
+			app.DieWithError(err, 5)
 		}
 	}
 
@@ -478,7 +440,7 @@ func main() {
 	err = carousel.Execute(action, argument, settings)
 	log.Printf("exec %s %s returns %v", action, argument, err)
 	if err != nil {
-		DieWithError(err, 6)
+		app.DieWithError(err, 6)
 	}
 	log.Print("...done")
 }

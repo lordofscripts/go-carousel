@@ -1,5 +1,5 @@
 Package: go-carousel
-Version: 0.9.3
+Version: 1.0.0
 Architecture: amd64
 Depends: 
 Section: utils

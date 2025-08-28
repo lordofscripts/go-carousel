@@ -1,3 +1,10 @@
+go-carousel (1.0.0) UNRELEASED; urgency=low
+
+  * Fixes #GHB-008 Notification icons not displayed when passes as file, only as binary.
+  * Added a Workflow job to build Windows binary (preliminary)
+
+ -- Lord of Scripts <lordofscripts@users.noreply.github.com>  Thu, 28 Aug 2025 13:45:00 -0500
+
 go-carousel (0.9.3) UNRELEASED; urgency=low
 
   * Fixes #GHB-005 Workspace to use exclusively UNIX-style line endings.

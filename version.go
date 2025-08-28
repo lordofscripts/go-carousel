@@ -16,7 +16,7 @@ import (
  *							G l o b a l s
  *-----------------------------------------------------------------*/
 const (
-	MANUAL_VERSION string = "0.9.3" // in case vcsVersion not injected during link phase
+	MANUAL_VERSION string = "1.0.0" // in case vcsVersion not injected during link phase
 
 	// Useful Unicode Characters
 	CHR_COPYRIGHT       = '\u00a9'      // ©

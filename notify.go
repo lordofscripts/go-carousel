@@ -9,6 +9,7 @@ package carousel
 
 import (
 	_ "embed"
+	"os"
 
 	"github.com/gen2brain/beeep"
 )
@@ -58,17 +59,34 @@ func init() {
  *-----------------------------------------------------------------*/
 
 func NotifyDesktop(body, iconPath string) error {
+	var icon any = nil
 	body = "<i>" + body + "</i>"
-	err := beeep.Notify(NAME, body, iconPath)
+
+	if iconPath != "" {
+		icon = getIconFile(iconPath)
+	}
+
+	err := beeep.Notify(NAME, body, icon)
 	return err
 }
 
 func NotifyAlert(body, iconPath string) error {
-	err := beeep.Alert(NAME, body, iconPath)
+	iconData := getIconFile(iconPath)
+	err := beeep.Alert(NAME, body, iconData)
 	return err
 }
 
 func NotifySound() error {
 	err := beeep.Beep(beeep.DefaultFreq, beeep.DefaultDuration)
 	return err
+}
+
+func getIconFile(filename string) []byte {
+	var data []byte
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		data = nil
+	}
+
+	return data
 }
